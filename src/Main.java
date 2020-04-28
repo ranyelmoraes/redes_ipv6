@@ -1,20 +1,33 @@
 
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class Main {
-    List<No_M> maquina = new ArrayList<>();
-    No_M hostAtual;
+    List<Maquina> maquina = new ArrayList<>();
+    Maquina hostAtual;
     public static void main(String[] args) {
         int op = 0;
         Main main = new Main();
-        Pacote msg = new Pacote();
 
-        No_M a = new No_M();
-        No_M b = new No_M();
-        No_M c = new No_M();
+        Maquina a = new Maquina();
+        Maquina b = new Maquina();
+        Maquina c = new Maquina();
+
+
+        Barramento barramento = new Barramento("m1");
+        barramento.adicionarBarramento(a);
+        barramento.adicionarBarramento(b);
+
+        Roteador roteador = new Roteador("F0:E5:FE:59:14:19","fe80::91e4:5b6f:e27f:aae1%13");
+
+        roteador.inserirBarramento(barramento);
+
+
+
+
+
+
 
         main.criaMaquinas(a, b, c);
 
@@ -77,7 +90,7 @@ public class Main {
 
     private void listarMensagens() {
 
-        for (No_M aux : maquina) {
+        for (Maquina aux : maquina) {
             if (!aux.getMensagens().isEmpty() && aux == hostAtual) {
                 System.out.println("\n");
                 System.out.println(aux.getHostname());
@@ -90,8 +103,8 @@ public class Main {
 
     private void enviarMensagem() {
         listarMaquinas();
-
-        for (No_M aux : maquina) {
+        Pacote pacote;
+        for (Maquina aux : maquina) {
             System.out.println(aux.getHostname());
             System.out.println("");
         }
@@ -102,7 +115,7 @@ public class Main {
         Scanner x = new Scanner(System.in);
         String hostName = x.nextLine();
 
-        No_M hostdestino = BuscaMaquina(hostName);
+        Maquina hostdestino = BuscaMaquina(hostName);
 
         while(hostdestino == hostAtual){
             listarMaquinas();
@@ -114,12 +127,17 @@ public class Main {
         System.out.println("Digite a mensagem");
         String msg = x.nextLine();
 
-        hostdestino.setMensagens(msg);
+        Mensagem mensagem  = new Mensagem(msg,hostdestino.getEnd());
+
+        pacote = hostdestino.sendMensagem(mensagem);
+
+
+
 
     }
 
-    private No_M BuscaMaquina(String hostName) {
-        for (No_M aux : maquina) {
+    private Maquina BuscaMaquina(String hostName) {
+        for (Maquina aux : maquina) {
 
             if (aux.getHostname().equals(hostName)) {
                 return aux;
@@ -133,7 +151,7 @@ public class Main {
 
     private void listarMaquinas() {
 
-        for (No_M aux : maquina) {
+        for (Maquina aux : maquina) {
             System.out.println(aux.getHostname());
             System.out.println(aux.getEnd());
             System.out.println(aux.getMac());
@@ -142,7 +160,7 @@ public class Main {
 
     }
 
-    private void criaMaquinas(No_M a, No_M b, No_M c) {
+    private void criaMaquinas(Maquina a, Maquina b, Maquina c) {
 
         a.setEnd("fe80::200:5aee:feaa:20a2");
         a.setMac("MAC RANYEL");

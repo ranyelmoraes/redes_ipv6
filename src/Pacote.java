@@ -2,6 +2,10 @@
 
 public class Pacote {
 
+    int versao;  // Para pacote IPV6, valor é 6
+    int prioridade;
+    String payLoad_extensao, camada_superior
+    String endereçoRoteador;
     public String IP_R;
     public String IP_S;
     public String cabeçalho_ipv6;
