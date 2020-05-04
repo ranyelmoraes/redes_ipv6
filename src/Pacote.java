@@ -3,36 +3,36 @@
 public class Pacote {
 
     int versao;  // Para pacote IPV6, valor é 6
-    int prioridade;
-    String payLoad_extensao, camada_superior
-    String endereçoRoteador;
-    public String IP_R;
-    public String IP_S;
-    public String cabeçalho_ipv6;
+    String traffic_Class;
+    String flow_Label;
+    int nextHeader; //ICMPV6
+    String payLoad_extensao;
+    String hop_Limit;
+    public String IP_Origem;
+    public String IP_Destino;
     public String Mensagem;
 
-    public String getIP_R() {
-        return IP_R;
+    public String getIP_Origem() {
+        return IP_Origem;
     }
 
-    public void setIP_R(String IP_R) {
-        this.IP_R = IP_R;
+    public void setIP_Origem(String IP_Origem) {
+        this.IP_Origem = IP_Origem;
     }
 
-    public String getIP_S() {
-        return IP_S;
+    public String getIP_Destino() {
+        return IP_Destino;
     }
 
-    public void setIP_S(String IP_S) {
-        this.IP_S = IP_S;
+    public void setIP_Destino(String IP_Destino) {
+        this.IP_Destino = IP_Destino;
     }
 
-    public String getCabeçalho_ipv6() {
-        return cabeçalho_ipv6;
-    }
-
-    public void setCabeçalho_ipv6(String cabeçalho_ipv6) {
-        this.cabeçalho_ipv6 = cabeçalho_ipv6;
+    public void setCabeçalho_ipv6(Mensagem msg, String origem) {
+        this.versao = 6;
+        this.Mensagem = msg.getMensagem();
+        this.IP_Destino = msg.ipv6Destino;
+        this.IP_Origem = origem;
     }
 
     public String getMensagem() {

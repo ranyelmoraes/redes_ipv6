@@ -10,9 +10,10 @@ public class Roteador {
     public Roteador(String macAddress, String ipv6) {
         this.macAddress = macAddress;
         this.ipv6 = ipv6;
+        listaDeBarramentos = new ArrayList<>();
     }
 
-    public void recebeMensagem(Object o) {
+    public void recebeMensagem(Object o, String barramento) {
 
 
     }
@@ -22,7 +23,8 @@ public class Roteador {
 
     }
 
-    public Pacote inserirBarramento(Barramento barramento){
+    public void inserirBarramento(Barramento barramento){
+
         this.listaDeBarramentos.add(barramento);
     }
 

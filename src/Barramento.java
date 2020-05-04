@@ -1,32 +1,31 @@
 import java.util.ArrayList;
-import java.util.Observable;
-import java.util.Observer;
 
-public class Barramento extends Observable {
+public class Barramento implements Observable {
 
+
+    ArrayList<Observer> observadores;
     ArrayList<Maquina> maquinasBarramento;
     String id;
 
+
     public Barramento(String id) {
-        maquinasBarramento = new ArrayList<>();
+        observadores = new ArrayList<>();
         this.id = id;
     }
 
-    public void adicionarBarramento(Maquina o) {
 
-        maquinasBarramento.add(o);
+    public void sendMensagemRoteador(Mensagem msg) {
+
+
     }
 
-    public void removerBarramento(Maquina o) {
-        maquinasBarramento.remove(o);
-    }
+    public ArrayList<Maquina> getMaquinasBarramento() {
 
-
-    public ArrayList<Maquina> getObservadores() {
         return maquinasBarramento;
     }
 
-    public void setObservadores(ArrayList<Maquina> maquina) {
+    public void setMaquinasBarramento(ArrayList<Maquina> maquina) {
+
         this.maquinasBarramento = maquina;
     }
 
@@ -38,4 +37,26 @@ public class Barramento extends Observable {
         this.id = id;
     }
 
+    @Override
+    public void notificar(Object msg) throws InterruptedException {
+
+        Pacote ipv6;
+        Maquina m;
+        for (Observer o : observadores) {
+            m = (Maquina) o;
+            if (msg instanceof Pacote) {
+                o.receberMensagem(msg,m.camadaRede.getNdp());
+            }
+        }
+    }
+
+    @Override
+    public void removerMaquina(Observer o) {
+        observadores.remove(o);
+    }
+
+    @Override
+    public void adicionarMaquina(Observer o) {
+        observadores.add(o);
+    }
 }

@@ -9,6 +9,7 @@ public class Mensagem {
     public Mensagem(String mensagem, String ipv6Destino) {
         this.mensagem = mensagem;
         this.ipv6Destino = ipv6Destino;
+
     }
 
     public String getMensagem() {
