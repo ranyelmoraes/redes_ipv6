@@ -69,9 +69,11 @@ public class Maquina implements Observer {
     @Override
     public void enviarMensagem(Object msg) throws InterruptedException, ExecutionException {
 
+        System.out.println("Camada de Aplicacao");
         System.out.println("Enviando pacote para camada de transporte...");
         Thread.sleep(4000);
         System.out.println("==============================================");
+
         camadaRede.enviarMensagem(msg);
 
 

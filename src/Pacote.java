@@ -10,6 +10,25 @@ public class Pacote {
     String hop_Limit;
     public String IP_Origem;
     public String IP_Destino;
+
+    public String getMACOrigem() {
+        return MACOrigem;
+    }
+
+    public void setMACOrigem(String MACOrigem) {
+        this.MACOrigem = MACOrigem;
+    }
+
+    public String getMACDestino() {
+        return MACDestino;
+    }
+
+    public void setMACDestino(String MACDestino) {
+        this.MACDestino = MACDestino;
+    }
+
+    public String MACOrigem;
+    public String MACDestino;
     public String Mensagem;
 
     public String getIP_Origem() {

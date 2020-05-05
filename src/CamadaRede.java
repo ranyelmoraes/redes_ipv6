@@ -1,4 +1,5 @@
 import javax.xml.bind.SchemaOutputResolver;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 public class CamadaRede {
@@ -8,6 +9,8 @@ public class CamadaRede {
     String gateway;
     String netID;
     NDP ndp = new NDP("00:E0:4C:5A:0E:C4");
+    Roteador r1 = new Roteador(" 00:E0:4C:0B:39:21  ","2001:0DB8:0000:0000:130F:0000:0000:140B");
+    ArrayList<TabelaDeRoteamento> tabelaDeRoteamento;
     Barramento barramento;
 
     public String getNetID() {
@@ -64,6 +67,7 @@ public class CamadaRede {
 
 
     public void enviarMensagem(Object mensagem) throws InterruptedException, ExecutionException { // Colocar essa mensagem em um pacote
+        System.out.println("Camada de rede recebeu a mensagem");
         Pacote packet = new Pacote();
         String resultado;
         int i = 1;
@@ -73,38 +77,38 @@ public class CamadaRede {
             Boolean fazerArp = true;
             String solicitacaoNDP = "";
 
-        if (fazerArp) { // Se arpResquest == true preciso fazer arp
+        if (fazerArp) {
 
             resultado = calcularNetID( m.getIpv6Destino());
             if (resultado.compareTo(this.netID) == 0) { // Mesma rede
                 System.out.println("=======================================");
                 System.out.println("ENTREGA DIRETA POIS ESTAO NA MESMA REDE");
-                System.out.println("VERIFICANDO MAC ADRESS VIA ICMP PELO NDP...: ");
+                System.out.println("VERIFICANDO MAC ADRESS VIA ICMP PELO NDP... ");
                 Thread.sleep(4000);
                 solicitacaoNDP = ndp.getNeighborSolicitation();
+                packet.setMACDestino(solicitacaoNDP);
                 System.out.println("=======================================");
 
             }
 
-     /*       else { // Esta em outra rede (Verificar a tabela de roteamento) para pegar o ipv4 do roteador
+            else { // Esta em outra rede (Verificar a tabela de roteamento) para pegar o ipv4 do roteador
 
                 System.out.println("ENTREGA INDIRETA");
-                System.out.println("CRIANDO PACOTE ARP: ");
 
-                for (ItensDaTabela item : tabelaDeRoteamento) {
+                for (TabelaDeRoteamento item : tabelaDeRoteamento) {
 
-                    resultado = pegarNetid(item.getMascara(), m.getIpv4Destino());
+                    resultado = calcularNetID(m.getIpv6Destino());
 
                     if (resultado.compareTo(item.getEnderecoDeRede()) == 0) {
 
-                        this.ipv4Roteador = item.getProximoSalto();
-                        this.criarPacoteArp(1, ipv4, ipv4Roteador, this.enlace.getMacAddress(), "0");
+
                     }
                 }
             }
-*/
+
             System.out.println("Neighbor Solicitation Recebida");
             packet = criarPacote(m);
+            System.out.println("=======================================");
             System.out.println("MENSAGEM A SER ENVIADA :" + packet.getMensagem());
             System.out.println("ORIGEM DO PACOTE: " + packet.getIP_Origem());
             System.out.println("DESTINO DO PACOTE: " + packet.getIP_Destino());
@@ -113,43 +117,6 @@ public class CamadaRede {
             barramento.notificar(packet);
         }
 
-  /*      else {       // Se a operacao for diferente de request == true , ela é repy tenho ja o macAddress do destino
-
-            if (this.pacoteArp.getIpV4Origem().equals(this.ipv4)) {
-
-                System.out.println("CRIANDO O PACOTE IPV4");
-                ArrayList<PacoteIpv4> p = new ArrayList<>();
-                PacoteIpv4 pacote = new PacoteIpv4(numeroDaMensagem, mensagemOriginal, this.ipv4, ipv4Destino, 1, this.enlace.getMtu());
-                pacote.PreencherComprimentoTotal();
-                pacote.setEndereçoRoteador(this.ipv4Roteador);
-
-                p = pacote.Fragmentar();
-
-                for (PacoteIpv4 pack : p) {
-                    if (i == 0) {
-
-                        System.out.println("");
-                        System.out.println("ENVIANDO O PACOTE IPV4 " + i + " PARA O BARRAMENTO ");
-                        System.out.println("--------------------------------------------------------");
-                    } else {
-
-                        System.out.println("");
-                        System.out.println("");
-                        System.out.println("ENVIANDO O PACOTE IPV4 " + i + " PARA O BARRAMENTO ");
-                        System.out.println("--------------------------------------------------------");
-                    }
-
-                    this.SendEnlace(pack);
-                    i++;
-                }
-            }
-        }
-
-
-        // UDP, TCP/IP protocolos que vem da camda de transporte
-        // E passar para o pacote
-
-   */
     }
 
     private Pacote criarPacote(Mensagem mensagem) {
